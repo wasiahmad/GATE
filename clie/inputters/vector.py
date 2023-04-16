@@ -133,8 +133,10 @@ def batchify(batch):
     if struct_relative_pos:
         struct_relpos_rep = torch.LongTensor(batch_size, max_len, max_len).fill_(max_seq_len)
         template_mat = torch.zeros((max_len, max_len))
-        template_mat[torch.triu_indices(max_len, max_len)] = 1
-        template_mat[torch.tril_indices(max_len, max_len)] = -1
+        [rows, cols] = torch.triu_indices(max_len, max_len)
+        template_mat[rows, cols] = 1
+        [rows, cols] = torch.tril_indices(max_len, max_len)
+        template_mat[rows, cols] = -1
         template_mat.fill_diagonal_(0)
 
     bert_embed_rep = None
